@@ -1,3 +1,5 @@
+This is a forked repo of the first code and is for mint 24183 (just don't push this repo to the original one)
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the BIOBUZZ (2026-2027) competition season.
