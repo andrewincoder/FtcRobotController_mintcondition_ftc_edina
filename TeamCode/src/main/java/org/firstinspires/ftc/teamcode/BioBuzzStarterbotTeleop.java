@@ -99,11 +99,11 @@ public class BioBuzzStarterbotTeleop extends OpMode {
          */
         leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        intake = hardwareMap.get(DcMotor.class, "intake");
+        intake = hardwareMap.get(DcMotor.class, "top_intake");
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
-        windmillServo = hardwareMap.get(CRServo.class, "wind");
-        leftIntakeServo = hardwareMap.get(CRServo.class, "left_intake_servo");
-        rightIntakeServo = hardwareMap.get(CRServo.class, "right_intake_servo");
+        windmillServo = hardwareMap.get(CRServo.class, "windmill");
+        leftIntakeServo = hardwareMap.get(CRServo.class, "left_intake");
+        rightIntakeServo = hardwareMap.get(CRServo.class, "right_intake");
 
         /*
          * To drive forward, most robots need the motor on one side to be reversed,
@@ -147,7 +147,7 @@ public class BioBuzzStarterbotTeleop extends OpMode {
          * servos work to pull elements into the intake.
          */
         rightIntakeServo.setDirection(DcMotorSimple.Direction.REVERSE);
-        windmillServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        windmillServo.setDirection(DcMotorSimple.Direction.FORWARD);
 
         /*
          * Tell the driver that initialization is complete.
@@ -266,7 +266,7 @@ public class BioBuzzStarterbotTeleop extends OpMode {
          */
         if (gamepad1.right_bumper && launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             windmillServo.setPower(1);
-            intakePower += 0.5;
+            intakePower += -0.5;
         } else {
             windmillServo.setPower(0);
         }
