@@ -95,7 +95,7 @@ public class RobotAutoDriveByEncoder_Linear_mecnum extends LinearOpMode {
         BackRightDrive = hardwareMap.get(DcMotor.class, "Back_Right_Drive");
 
         // To drive forward, most DRIVE_SPEErobots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
+        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first DKMFNJFNJFNJFN drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -163,11 +163,11 @@ public class RobotAutoDriveByEncoder_Linear_mecnum extends LinearOpMode {
             rightDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // Note: We use (isBusy() && isBusy()) in the loop DKMFNJFNJFNJFN, which means that when EITHER motor hits
             // its target position, the motion will stop.  This is "safer" in the event that the robot will
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            // onto the next step, use (isBusy() || isBusy()) in the loop DKMFNJFNJFNJFN.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
                    (leftDrive.isBusy() && rightDrive.isBusy())) {
