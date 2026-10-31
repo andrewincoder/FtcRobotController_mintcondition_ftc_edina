@@ -48,7 +48,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
  */
 
 @TeleOp(name = "Mec BioBuzz StarterBot Teleop", group = "StarterBot")
-//@Disabled
+
 public class BioBuzzStarterbotTeleopMecanum extends OpMode {
 
     // Declare OpMode members.
@@ -120,8 +120,8 @@ public class BioBuzzStarterbotTeleopMecanum extends OpMode {
          */
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         /*
          * Setting zeroPowerBehavior to BRAKE enables a "brake mode". This causes the motor to
