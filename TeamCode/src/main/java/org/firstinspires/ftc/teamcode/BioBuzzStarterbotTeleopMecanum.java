@@ -158,7 +158,7 @@ public class BioBuzzStarterbotTeleopMecanum extends OpMode {
          * servos work to pull elements into the intake.
          */
         rightIntakeServo.setDirection(DcMotorSimple.Direction.REVERSE);
-        windmillServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        windmillServo.setDirection(DcMotorSimple.Direction.FORWARD);
 
         /*
          * Tell the driver that initialization is complete.
@@ -289,7 +289,7 @@ public class BioBuzzStarterbotTeleopMecanum extends OpMode {
          */
         if (gamepad1.right_bumper && launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             windmillServo.setPower(1);
-            intakePower += 0.5;
+            intakePower += -0.5;
         } else {
             windmillServo.setPower(0);
         }
