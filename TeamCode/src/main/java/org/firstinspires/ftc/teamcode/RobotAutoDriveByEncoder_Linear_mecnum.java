@@ -94,7 +94,8 @@ public class RobotAutoDriveByEncoder_Linear_mecnum extends LinearOpMode {
         BackLeftDrive = hardwareMap.get(DcMotor.class, "Back_Left_Drive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "Back_Right_Drive");
 
-        // To drive forward, most DRIVE_SPEErobots need the motor on one side to be reversed, because the axles point in opposite directions.
+        // To drive forward, most DRIVE_SPEErobots need the motor on one side to be reverse
+        //                                                                                                                                          d, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first DKMFNJFNJFNJFN drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
