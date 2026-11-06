@@ -48,7 +48,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
  */
 
 @TeleOp(name = "Mec BioBuzz StarterBot Teleop", group = "StarterBot")
-//@Disabled
+
 public class BioBuzzStarterbotTeleopMecanum extends OpMode {
 
     // Declare OpMode members.
@@ -120,8 +120,8 @@ public class BioBuzzStarterbotTeleopMecanum extends OpMode {
          */
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         /*
          * Setting zeroPowerBehavior to BRAKE enables a "brake mode". This causes the motor to
@@ -158,7 +158,7 @@ public class BioBuzzStarterbotTeleopMecanum extends OpMode {
          * servos work to pull elements into the intake.
          */
         rightIntakeServo.setDirection(DcMotorSimple.Direction.REVERSE);
-        windmillServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        windmillServo.setDirection(DcMotorSimple.Direction.FORWARD);
 
         /*
          * Tell the driver that initialization is complete.
@@ -289,7 +289,7 @@ public class BioBuzzStarterbotTeleopMecanum extends OpMode {
          */
         if (gamepad1.right_bumper && launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             windmillServo.setPower(1);
-            intakePower += 0.5;
+            intakePower += -0.5;
         } else {
             windmillServo.setPower(0);
         }
