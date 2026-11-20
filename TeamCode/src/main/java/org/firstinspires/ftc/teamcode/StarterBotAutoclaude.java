@@ -61,9 +61,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  *
  * The robot starts against the wall, launches, then drives away from the wall.
  */
-@Autonomous(name="StarterBotAutonomous", group = "robot")
+@Autonomous(name="Autonomous", group = "robot")
 //@Disabled
-public class StarterBotAuto extends OpMode {
+public class StarterBotAutoclaude extends OpMode {
     /*
      * Launcher velocity in encoder ticks per second (28 ticks/rev motor encoder).
      */
@@ -81,7 +81,7 @@ public class StarterBotAuto extends OpMode {
      *                  values are 1.1 - 1.2. Command a 600mm strafe, measure how far the robot
      *                  actually went, and adjust:  new = old * (commanded / actual).
      */
-    final double DRIVE_SPEED = 0.5;
+    final double DRIVE_SPEED = 0.35;
     final double ROTATE_SPEED = 0.2;
     final double WHEEL_DIAMETER_MM = 96;
     final double ENCODER_TICKS_PER_REV = 537.7;
@@ -111,8 +111,8 @@ public class StarterBotAuto extends OpMode {
      * TECH TIP: State Machines (see original file). Add more states here, e.g. STRAFE, ROTATE.
      */
     public enum AutonomousState {
-        LAUNCH,
-        DRIVE,
+        DRIVE_FORWARD,
+        DRIVE_BACK,
         COMPLETE
     }
 
@@ -123,7 +123,7 @@ public class StarterBotAuto extends OpMode {
      */
     @Override
     public void init() {
-        autonomousState = AutonomousState.LAUNCH;
+        autonomousState = AutonomousState.DRIVE_FORWARD;
 
         /*
          * The strings must match the names in the robot configuration on the Driver Hub /
@@ -135,7 +135,7 @@ public class StarterBotAuto extends OpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         intake = hardwareMap.get(DcMotor.class, "intake");
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
-        windmillServo = hardwareMap.get(CRServo.class, "windmill");
+        windmillServo = hardwareMap.get(CRServo.class, "windmillServo");
         leftIntakeServo = hardwareMap.get(CRServo.class, "left_intake_servo");
         rightIntakeServo = hardwareMap.get(CRServo.class, "right_intake_servo");
 
@@ -145,9 +145,9 @@ public class StarterBotAuto extends OpMode {
          * FORWARD/REVERSE on BOTH sides. If it veers or spins, one side is wrong.
          * Test with a short drive() before trusting strafe() and rotate().
          */
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         // Reset encoders on all four drive motors.
@@ -182,22 +182,20 @@ public class StarterBotAuto extends OpMode {
     @Override
     public void loop() {
         switch (autonomousState) {
-            case LAUNCH:
-                launch(true);
-                if (autoTimer.seconds() > 10) {
-                    launch(false);
-                    intakePower = 0;
-                    driveTimer.reset();
-                    autonomousState = AutonomousState.DRIVE;
+            case DRIVE_FORWARD:
+                // Drive forward 750 mm (takes ~4.5 seconds at speed 0.35)
+                if (drive(DRIVE_SPEED, 750, DistanceUnit.MM, 0.5)) {
+                    autonomousState = AutonomousState.DRIVE_BACK;
                 }
                 break;
-            case DRIVE:
-                if (drive(DRIVE_SPEED, -120, DistanceUnit.MM, 2)) {
+            case DRIVE_BACK:
+                // Drive backward -750 mm to return to where it started (takes ~4.5 seconds)
+                if (drive(DRIVE_SPEED, -80, DistanceUnit.MM, 0.5)) {
                     autonomousState = AutonomousState.COMPLETE;
                 }
                 break;
             case COMPLETE:
-                telemetry.addLine("Auto Complete!");
+                telemetry.addLine("Auto Complete! Returned to start.");
                 break;
         }
 

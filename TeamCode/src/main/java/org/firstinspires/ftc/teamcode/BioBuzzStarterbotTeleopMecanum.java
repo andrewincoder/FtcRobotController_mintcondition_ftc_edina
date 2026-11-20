@@ -133,7 +133,7 @@ public class BioBuzzStarterbotTeleopMecanum extends OpMode {
         leftBackDrive.setZeroPowerBehavior(BRAKE);
         rightBackDrive.setZeroPowerBehavior(BRAKE);
         intake.setZeroPowerBehavior(BRAKE);
-
+        launcher.setZeroPowerBehavior(BRAKE);
         /*
          * Here we set our launcher to the RUN_USING_ENCODER runmode.
          * If you notice that you have no control over the velocity of the motor, it just jumps
@@ -274,12 +274,18 @@ public class BioBuzzStarterbotTeleopMecanum extends OpMode {
          * holding down the right gamepad. If they are, then we want to start spinning up the launcher.
          * Otherwise, we start spinning the launcher down.
          */
+
         if (gamepad1.right_bumper) {
+            if (launcher.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
+                launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
             launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
         } else {
-            launcher.setVelocity(0);
+            if (launcher.getMode() != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+                launcher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+            launcher.setPower(0);
         }
-
         /*
          * Here we ask if the driver is currently pressing the right bumper, AND the launcher is
          * spinning fast enough to make a successful shot. If it is, then we will turn on the
