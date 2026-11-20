@@ -183,19 +183,12 @@ public class StarterBotAutoclaude extends OpMode {
     public void loop() {
         switch (autonomousState) {
             case DRIVE_FORWARD:
-                // Drive forward 750 mm (takes ~4.5 seconds at speed 0.35)
                 if (drive(DRIVE_SPEED, 750, DistanceUnit.MM, 0.5)) {
-                    autonomousState = AutonomousState.DRIVE_BACK;
-                }
-                break;
-            case DRIVE_BACK:
-                // Drive backward -750 mm to return to where it started (takes ~4.5 seconds)
-                if (drive(DRIVE_SPEED, -80, DistanceUnit.MM, 0.5)) {
                     autonomousState = AutonomousState.COMPLETE;
                 }
                 break;
             case COMPLETE:
-                telemetry.addLine("Auto Complete! Returned to start.");
+                telemetry.addLine("Auto Complete!");
                 break;
         }
 
