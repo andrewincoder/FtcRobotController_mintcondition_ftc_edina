@@ -48,6 +48,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode.*;
 
+import java.util.concurrent.TimeUnit;
+
 /*
  * Autonomous file for the goBILDA StarterBot (BIOBUZZ season), MECANUM drive version.
  *
@@ -205,6 +207,7 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
                 break;
         }
 
+
         intake.setPower(intakePower);
 
         telemetry.addData("AutoState", autonomousState);
@@ -286,7 +289,11 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
     }
 
     private boolean opModeIsActive() {
-        return true;
+        if(driveTimer.seconds() > 10) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
