@@ -201,6 +201,7 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
                 break;
             case COMPLETE:
                 telemetry.addLine("Auto Complete! Returned to start.");
+
                 break;
         }
 
@@ -232,8 +233,8 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
         telemetry.addData("Status", "Initialized - ready to launch");
         telemetry.update();
 
-
         // ---------- AUTO ----------
+
         if (opModeIsActive()) {
             ElapsedTime timer = new ElapsedTime();
 
@@ -285,12 +286,13 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
     }
 
     private boolean opModeIsActive() {
-
+        return true;
     }
+
 
     @Override
-    public void stop() {
-    }
+        public void stop () {
+        }
 
   /*  void launch(boolean input) {
         if (input) {
@@ -309,64 +311,66 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
         }
     }
 */
-    /* ---------------------------------------------------------------------------------------
-     * Drive helpers
-     * ------------------------------------------------------------------------------------- */
+        /* ---------------------------------------------------------------------------------------
+         * Drive helpers
+         * ------------------------------------------------------------------------------------- */
 
-    private DcMotor[] driveMotors() {
-        return new DcMotor[]{leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive};
-    }
-
-    /**
-     * Sets a target (in ticks) for each wheel, switches to RUN_TO_POSITION and applies power.
-     */
-    private void setDriveTargets(int lf, int rf, int lb, int rb, double speed) {
-        leftFrontDrive.setTargetPosition(lf);
-        rightFrontDrive.setTargetPosition(rf);
-        leftBackDrive.setTargetPosition(lb);
-        rightBackDrive.setTargetPosition(rb);
-
-        for (DcMotor m : driveMotors()) {
-            m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            m.setPower(speed);
-        }
-    }
-
-    /**
-     * Largest remaining error, in ticks, across all four drive wheels.
-     */
-    private double maxDriveErrorTicks() {
-        double max = 0;
-        for (DcMotor m : driveMotors()) {
-            max = Math.max(max, Math.abs(m.getTargetPosition() - m.getCurrentPosition()));
-        }
-        return max;
-    }
-
-    /**
-     * Drive straight. Positive = forward, negative = backward.
-     *
-     * @param speed From 0-1
-     * @param distance In specified unit
-     * @param distanceUnit the unit of measurement for distance
-     * @param holdSeconds the number of seconds to wait at position before returning true.
-     * @return "true" if all wheels are within tolerance of the target for more than
-     * holdSeconds. "false" otherwise.
-     */
-    boolean drive(double speed, double distance, @NonNull DistanceUnit distanceUnit, double holdSeconds) {
-        final double TOLERANCE_MM = 10;
-
-        int target = (int) (distanceUnit.toMm(distance) * TICKS_PER_MM);
-
-        // All four wheels turn the same way to go straight.
-        setDriveTargets(target, target, target, target, speed);
-
-        if (maxDriveErrorTicks() > (TOLERANCE_MM * TICKS_PER_MM)) {
-            driveTimer.reset();
+        private DcMotor[] driveMotors () {
+            return new DcMotor[]{leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive};
         }
 
-        return (driveTimer.seconds() > holdSeconds);
-    }
+        /**
+         * Sets a target (in ticks) for each wheel, switches to RUN_TO_POSITION and applies power.
+         */
+        private void setDriveTargets ( int lf, int rf, int lb, int rb, double speed){
+            leftFrontDrive.setTargetPosition(lf);
+            rightFrontDrive.setTargetPosition(rf);
+            leftBackDrive.setTargetPosition(lb);
+            rightBackDrive.setTargetPosition(rb);
+
+            for (DcMotor m : driveMotors()) {
+                m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                m.setPower(speed);
+            }
+        }
+
+        /**
+         * Largest remaining error, in ticks, across all four drive wheels.
+         */
+        private double maxDriveErrorTicks () {
+            double max = 0;
+            for (DcMotor m : driveMotors()) {
+                max = Math.max(max, Math.abs(m.getTargetPosition() - m.getCurrentPosition()));
+            }
+            return max;
+        }
+
+        /**
+         * Drive straight. Positive = forward, negative = backward.
+         *
+         * @param speed From 0-1
+         * @param distance In specified unit
+         * @param distanceUnit the unit of measurement for distance
+         * @param holdSeconds the number of seconds to wait at position before returning true.
+         * @return "true" if all wheels are within tolerance of the target for more than
+         * holdSeconds. "false" otherwise.
+         */
+        boolean drive ( double speed, double distance, @NonNull DistanceUnit distanceUnit,
+        double holdSeconds){
+            final double TOLERANCE_MM = 10;
+
+            int target = (int) (distanceUnit.toMm(distance) * TICKS_PER_MM);
+
+            // All four wheels turn the same way to go straight.
+            setDriveTargets(target, target, target, target, speed);
+
+            if (maxDriveErrorTicks() > (TOLERANCE_MM * TICKS_PER_MM)) {
+                driveTimer.reset();
+            }
+
+            return (driveTimer.seconds() > holdSeconds);
+        }
+
 
     /**
      * Strafe sideways. Positive = right, negative = left.
