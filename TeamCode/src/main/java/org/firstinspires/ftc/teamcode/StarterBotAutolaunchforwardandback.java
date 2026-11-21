@@ -46,7 +46,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode.*;
 
 /*
  * Autonomous file for the goBILDA StarterBot (BIOBUZZ season), MECANUM drive version.
@@ -61,7 +61,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  *
  * The robot starts against the wall, launches, then drives away from the wall.
  */
-@Autonomous(name="Autonomous", group = "robot")
+@Autonomous(name="Autonomouslaunchforwardandback", group = "robot")
 //@Disabled
 public class StarterBotAutolaunchforwardandback extends OpMode {
     /*
@@ -81,6 +81,11 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
      *                  values are 1.1 - 1.2. Command a 600mm strafe, measure how far the robot
      *                  actually went, and adjust:  new = old * (commanded / actual).
      */
+    // How long to keep feeding elements into the launcher (seconds)
+    public final double LAUNCH_DURATION = 10.0;
+    // Safety: give up waiting for spin-up after this many seconds
+    public final double SPINUP_TIMEOUT = 4.0;
+
     final double DRIVE_SPEED = 0.35;
     final double ROTATE_SPEED = 0.2;
     final double WHEEL_DIAMETER_MM = 96;
@@ -211,13 +216,83 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
         telemetry.addData("Back target", "left (%d), right (%d)",
                 leftBackDrive.getTargetPosition(), rightBackDrive.getTargetPosition());
         telemetry.update();
+        launcher.setZeroPowerBehavior(BRAKE);
+        intake.setZeroPowerBehavior(BRAKE);
+        launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,
+                new PIDFCoefficients(40, 0, 0, 12.5));
+
+        rightIntakeServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        windmillServo.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        leftIntakeServo.setPower(0);
+        rightIntakeServo.setPower(0);
+        windmillServo.setPower(0);
+
+        telemetry.addData("Status", "Initialized - ready to launch");
+        telemetry.update();
+
+
+        // ---------- AUTO ----------
+        if (opModeIsActive()) {
+            ElapsedTime timer = new ElapsedTime();
+
+            // 1) Spin up the launcher and wait until it's fast enough
+            launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+            timer.reset();
+            while (opModeIsActive()
+                    && launcher.getVelocity() < LAUNCHER_MIN_VELOCITY
+                    && timer.seconds() < SPINUP_TIMEOUT) {
+                telemetry.addData("Status", "Spinning up");
+                telemetry.addData("Velocity", launcher.getVelocity());
+                telemetry.update();
+            }
+
+            // 2) Feed elements into the launcher for LAUNCH_DURATION seconds
+            timer.reset();
+            while (opModeIsActive() && timer.seconds() < LAUNCH_DURATION) {
+                launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+
+                // Only feed when the launcher is up to speed (same logic as teleop)
+                if (launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
+                    windmillServo.setPower(1);
+                    intake.setPower(0.5);
+                    leftIntakeServo.setPower(0.5);
+                    rightIntakeServo.setPower(0.5);
+                } else {
+                    windmillServo.setPower(0);
+                    intake.setPower(0);
+                    leftIntakeServo.setPower(0);
+                    rightIntakeServo.setPower(0);
+                }
+
+                telemetry.addData("Status", "Launching");
+                telemetry.addData("Velocity", launcher.getVelocity());
+                telemetry.addData("Time left", "%.1f", LAUNCH_DURATION - timer.seconds());
+                telemetry.update();
+            }
+
+            // 3) Shut everything down
+            windmillServo.setPower(0);
+            intake.setPower(0);
+            leftIntakeServo.setPower(0);
+            rightIntakeServo.setPower(0);
+            launcher.setVelocity(0);
+
+            telemetry.addData("Status", "Done");
+            telemetry.update();
+        }
+    }
+
+    private boolean opModeIsActive() {
+
     }
 
     @Override
     public void stop() {
     }
 
-    void launch(boolean input) {
+  /*  void launch(boolean input) {
         if (input) {
             launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
         } else {
@@ -233,7 +308,7 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
             windmillServo.setPower(0);
         }
     }
-
+*/
     /* ---------------------------------------------------------------------------------------
      * Drive helpers
      * ------------------------------------------------------------------------------------- */
