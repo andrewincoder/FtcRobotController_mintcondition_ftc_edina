@@ -289,7 +289,7 @@ public class StarterBotAutolaunchforwardandback extends OpMode {
     }
 
     private boolean opModeIsActive() {
-        if(driveTimer.seconds() > 5) {
+        if(driveTimer.seconds() > 10) {
             return true;
         } else {
             return false;

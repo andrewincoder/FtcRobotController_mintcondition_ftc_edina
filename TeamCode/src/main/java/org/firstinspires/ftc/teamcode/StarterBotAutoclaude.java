@@ -183,7 +183,7 @@ public class StarterBotAutoclaude extends OpMode {
     public void loop() {
         switch (autonomousState) {
             case DRIVE_FORWARD:
-                if (drive(DRIVE_SPEED, 750, DistanceUnit.MM, 0.5)) {
+                if (drive(DRIVE_SPEED, 500, DistanceUnit.MM, 0.5)) {
                     autonomousState = AutonomousState.COMPLETE;
                 }
                 break;
